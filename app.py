@@ -38,13 +38,22 @@ if st.button("Traduzir e Formatar", type="primary"):
                 conteudo = raw_data.decode("iso-8859-1")
             # ----------------------------------------------
 
-            # Configurar a IA
             genai.configure(api_key=api_key)
             
-            # Mudamos para o modelo Flash (mais rápido e com maior disponibilidade)
-            model = genai.GenerativeModel('gemini-1.5-flash') 
+            # Tenta encontrar o melhor modelo disponível na sua conta
+            model_name = 'gemini-1.5-flash' # Nome padrão
+            
+            try:
+                # Teste rápido para ver se o modelo existe
+                model = genai.GenerativeModel(model_name)
+                # Teste de conexão simples
+                model.generate_content("oi", generation_config={"max_output_tokens": 1})
+            except Exception:
+                # Se der erro 404, ele tenta o modelo estável antigo
+                model_name = 'gemini-pro'
+                model = genai.GenerativeModel(model_name)
 
-            with st.spinner('Traduzindo banco de dados do Ragnarok...'):
+            with st.spinner(f'Usando modelo {model_name}... Traduzindo banco de dados...'):
                 
                 # 4. O "Cérebro" do Agente (Prompt Engineering)
                 prompt = f"""
