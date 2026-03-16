@@ -38,11 +38,13 @@ if st.button("Traduzir e Formatar", type="primary"):
                 conteudo = raw_data.decode("iso-8859-1")
             # ----------------------------------------------
 
+            # Configurar a IA
             genai.configure(api_key=api_key)
-            model = genai.GenerativeModel('gemini-1.5-pro') 
+            
+            # Mudamos para o modelo Flash (mais rápido e com maior disponibilidade)
+            model = genai.GenerativeModel('gemini-1.5-flash') 
 
-            with st.spinner('A magia está acontecendo...'):
-
+            with st.spinner('Traduzindo banco de dados do Ragnarok...'):
                 
                 # 4. O "Cérebro" do Agente (Prompt Engineering)
                 prompt = f"""
